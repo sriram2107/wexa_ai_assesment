@@ -2,6 +2,7 @@
 Application configuration using Pydantic Settings.
 """
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings
 
 
@@ -21,6 +22,16 @@ class Settings(BaseSettings):
     # Database
     DATABASE_URL: str = "sqlite+aiosqlite:///./analytics.db"
     DATABASE_ECHO: bool = False
+
+    @field_validator("DATABASE_URL", mode="after")
+    @classmethod
+    def assemble_db_url(cls, v: str) -> str:
+        if v.startswith("postgresql://"):
+            return v.replace("postgresql://", "postgresql+asyncpg://", 1)
+        elif v.startswith("postgres://"):
+            return v.replace("postgres://", "postgresql+asyncpg://", 1)
+        return v
+
 
     # Redis
     REDIS_URL: str = "redis://localhost:6379/0"
