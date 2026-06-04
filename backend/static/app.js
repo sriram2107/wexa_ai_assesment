@@ -13,7 +13,7 @@ if (hostname === 'localhost' || hostname === '127.0.0.1') {
     wsBase = `${wsProtocol}//${window.location.host}/ws`;
 } else {
     // Production Railway URL. (We will update this if different after provisioning)
-    const railwayHost = 'wexa-ai-assesment-production.up.railway.app';
+    const railwayHost = 'backend-production-47208.up.railway.app';
     API_BASE = `https://${railwayHost}/api`;
     wsBase = `wss://${railwayHost}/ws`;
 }
