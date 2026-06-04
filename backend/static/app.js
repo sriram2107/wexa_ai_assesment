@@ -3,7 +3,20 @@
    State management, API calls, WebSocket, Chart rendering
    ═══════════════════════════════════════════════════════════════════ */
 
-const API_BASE = '/api';
+let API_BASE;
+let wsBase;
+
+const hostname = window.location.hostname;
+if (hostname === 'localhost' || hostname === '127.0.0.1') {
+    API_BASE = '/api';
+    const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    wsBase = `${wsProtocol}//${window.location.host}/ws`;
+} else {
+    // Production Railway URL. (We will update this if different after provisioning)
+    const railwayHost = 'wexa-ai-assesment-production.up.railway.app';
+    API_BASE = `https://${railwayHost}/api`;
+    wsBase = `wss://${railwayHost}/ws`;
+}
 
 // ── State ────────────────────────────────────────────────────────────
 
@@ -1188,9 +1201,6 @@ async function deleteWidget(widgetId) {
 
 function connectWebSockets() {
     if (!state.token) return;
-
-    const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const wsBase = `${wsProtocol}//${window.location.host}/ws`;
 
     // Dashboard updates
     try {
